@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./Eightball.css";
 
 const EIGHTBALL_ANSWERS = [
   { msg: "It is certain.", color: "green" },
@@ -23,50 +24,70 @@ const EIGHTBALL_ANSWERS = [
   { msg: "Very doubtful.", color: "red" },
 ];
 
-function shuffle(array) {
-  let currentIndex = array.length,  randomIndex;
+/** Generates an eightball response with a random message and color from
+ * EIGHTBALL_ANSWERS
+ *
+ * Props:
+ * - answers
+ *
+ * State:
+ * - {
+ *    msg: 'think of a question',
+ *    color: 'black'
+ * }
+ *
+ * Renders Eightball on DOM
+ *
+ * */
 
-  // While there remain elements to shuffle.
-  while (currentIndex !== 0) {
+function Eightball({ answers = EIGHTBALL_ANSWERS }) {
 
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
-
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
-  }
-
-  return array;
-}
-
-
-function Eightball({ answers=EIGHTBALL_ANSWERS }) {
-
-  const [answer, setAnswer] = useState({
+  const originalState = {
     msg: "think of a question",
     color: "black"
-  });
+  };
 
-  function changeAns(){
-    const randomAns = shuffle(answers);
-    setAnswer(randomAns[0]);
+
+
+  // function counter() {
+  //   let counter = {};
+  //   if (counter[color]) {
+  //     counter[color]++;
+  //   }
+  // }
+
+  const [answer, setAnswer] = useState(originalState);
+  const [count, setCount] = useState('0');
+
+  function changeAns() {
+    const randomIndex = Math.floor(Math.random() * answers.length);
+    setAnswer(answers[randomIndex]);
+
+    // setCount(colorCounter);
+  }
+
+  function reset() {
+    setAnswer(originalState);
   }
 
   return (
-    <div
-    style={{
-      backgroundColor:'black',
-      width: '200px',
-      height: '200px',
-      borderRadius: '50%',
-      color: 'white'
-    }}>
+    <div>
+      <div
+        onClick={changeAns}
+        className='eightball'
+        style={{
+          backgroundColor: `${answer.color}`
+        }}>
 
-      <h3 onClick={changeAns}>{answer.msg}</h3>
+        <h3>{answer.msg}</h3>
+      </div>
+      <p>{count}</p>
+      <button onClick={reset}>Reset</button>
+
     </div>
-  )
+  );
 }
+
+
 
 export default Eightball;
